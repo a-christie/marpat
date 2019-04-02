@@ -32,3 +32,4 @@ test/
 .jsdoc.js
 .prettierrc.js
 CODE_OF_CONDUCT.md
+nedbdata/
