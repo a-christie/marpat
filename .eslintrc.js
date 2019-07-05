@@ -4,13 +4,10 @@ module.exports = {
 		es6: true
 	},
 	parserOptions: {
-		sourceType: 'module',
-		ecmaFeatures: {
-			jsx: true
-		}
+		sourceType: 'module'
 	},
 	plugins: ['prettier'],
-	extends: ['google', 'eslint:recommended'],
+	extends: ['google', 'eslint:recommended', 'prettier'],
 	rules: {
 		'prettier/prettier': 'error'
 	}
