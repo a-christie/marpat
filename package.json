@@ -9,6 +9,7 @@
   },
   "scripts": {
     "test": "nyc _mocha --recursive ./test --timeout=30000 --exit",
+    "test-mongo-client": "nyc _mocha  ./test/clients/mongodb.test.js --timeout=30000 --exit",
     "report": "nyc report --reporter=html",
     "coverage": "nyc report --reporter=html --reporter=text-lcov | coveralls",
     "generate-docs": "mos",

@@ -2,8 +2,9 @@
 
 /* global describe before beforeEach afterEach, after, it */
 
+const sinon = require('sinon');
 const { expect } = require('chai');
-const { ObjectId } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 const { connect, Document, Client } = require('../../index');
 const { Data } = require('../mocks');
 const getData1 = require('../util').data1;
@@ -11,6 +12,8 @@ const getData2 = require('../util').data2;
 const { Address, Pet, User } = require('../mocks');
 const { validateData1, validateId } = require('../util');
 const { isNativeId } = require('../../lib/validate');
+
+const sandbox = sinon.createSandbox();
 
 describe('Base MongoDB Client', () => {
   const url = 'mongodb://localhost/marpat_test';
@@ -29,7 +32,11 @@ describe('Base MongoDB Client', () => {
     done();
   });
 
-  afterEach(() => database.dropDatabase());
+  afterEach(done => {
+    database.dropDatabase();
+    sandbox.restore();
+    return done();
+  });
 
   after(() => database.dropDatabase());
 
@@ -138,7 +145,20 @@ describe('Base MongoDB Client', () => {
         .then(done, done);
     });
   });
-  describe('#dropDatabase()', () => {});
+  describe('#dropDatabase()', () => {
+    it('should reject if mongo rejects', function(done) {
+      sandbox.stub(Client()._mongo, 'dropDatabase').callsFake(callback => {
+        let error = Error('sinon mock error');
+        return callback(error, null);
+      });
+      Client()
+        .dropDatabase()
+        .catch(error => {
+          expect(error instanceof Error).to.be.true;
+          done();
+        });
+    });
+  });
   describe('#count()', () => {
     it('should reject an invalid count query', function(done) {
       let data = getData1();
@@ -262,7 +282,10 @@ describe('MongoDB Client', () => {
     done();
   });
 
-  afterEach(() => database.dropDatabase());
+  afterEach(() => {
+    sandbox.restore();
+    database.dropDatabase();
+  });
 
   after(() => database.dropDatabase());
   describe('#save()', () => {
@@ -700,6 +723,26 @@ describe('MongoDB Client', () => {
           validateId(cities[2]);
         })
         .then(done, done);
+    });
+
+    it('should reject if mongo cursor rejects', done => {
+      let mockDbCollection = {
+        find: function() {
+          return {
+            toArray: function(callback) {
+              let error = Error('sinon stubbed error');
+              return callback(error);
+            }
+          };
+        }
+      };
+
+      sandbox.stub(Client()._mongo, 'collection').returns(mockDbCollection);
+
+      City.find({}).catch(error => {
+        expect(error instanceof Error).to.be.true;
+        done();
+      });
     });
 
     it('should load all objects when query is not provided', done => {
@@ -1245,10 +1288,10 @@ describe('MongoDB Client', () => {
     }
 
     /*
-         * The MongoClient should cast all IDs to ObjectIDs. If the objects
-         * requested aren't properly returned, then the IDs were not
-         * successfully cast.
-         */
+     * The MongoClient should cast all IDs to ObjectIDs. If the objects
+     * requested aren't properly returned, then the IDs were not
+     * successfully cast.
+     */
     it('should automatically cast string ID in query to ObjectID', function(done) {
       let user = User.create();
       user.firstName = 'Billy';
@@ -1269,9 +1312,9 @@ describe('MongoDB Client', () => {
     });
 
     /*
-         * Sanity check to make sure we didn't screw up the case
-         * where user actually passes an ObjectId
-         */
+     * Sanity check to make sure we didn't screw up the case
+     * where user actually passes an ObjectId
+     */
     it('should automatically cast string ID in query to ObjectID', function(done) {
       let user = User.create();
       user.firstName = 'Billy';
@@ -1291,9 +1334,9 @@ describe('MongoDB Client', () => {
     });
 
     /*
-         * Same as above, but we're testing out more complicated
-         * queries. In this case we try it with '$in'.
-         */
+     * Same as above, but we're testing out more complicated
+     * queries. In this case we try it with '$in'.
+     */
     it("should automatically cast string IDs in '$in' operator to ObjectIDs", function(done) {
       let user1 = User.create();
       user1.firstName = 'Billy';
