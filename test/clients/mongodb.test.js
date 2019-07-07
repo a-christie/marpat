@@ -33,7 +33,7 @@ describe('Base MongoDB Client', () => {
   });
 
   afterEach(done => {
-    database.dropDatabase();
+    
     sandbox.restore();
     return done();
   });
