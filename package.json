@@ -8,7 +8,7 @@
     "url": "http://mutesymphony.com"
   },
   "scripts": {
-    "test": "nyc _mocha --recursive ./test --timeout=30000 --exit",
+    "test": "snyk test && nyc _mocha --recursive ./test --timeout=30000 --exit",
     "test-mongo-client": "nyc _mocha  ./test/clients/mongodb.test.js --timeout=30000 --exit",
     "report": "nyc report --reporter=html",
     "coverage": "nyc report --reporter=html --reporter=text-lcov | coveralls",
@@ -47,7 +47,7 @@
   },
   "dependencies": {
     "lodash": "^4.17.11",
-    "snyk": "^1.189.0"
+    "snyk": "^1.192.3"
   },
   "optionalDependencies": {
     "mongodb": "^3.1.8",
