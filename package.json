@@ -8,7 +8,8 @@
     "url": "http://mutesymphony.com"
   },
   "scripts": {
-    "test": "nyc _mocha --recursive ./test --timeout=30000 --exit",
+    "test": "snyk test && nyc _mocha --recursive ./test --timeout=30000 --exit",
+    "test-mongo-client": "nyc _mocha  ./test/clients/mongodb.test.js --timeout=30000 --exit",
     "report": "nyc report --reporter=html",
     "coverage": "nyc report --reporter=html --reporter=text-lcov | coveralls",
     "generate-docs": "mos",
@@ -46,26 +47,27 @@
   },
   "dependencies": {
     "lodash": "^4.17.11",
-    "snyk": "^1.189.0"
+    "snyk": "^1.192.3"
   },
   "optionalDependencies": {
-    "nedb": "1.8.0",
-    "mongodb": "^3.1.8"
+    "mongodb": "^3.1.8",
+    "nedb": "1.8.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "coveralls": "^3.0.3",
-    "eslint": "^5.16.0",
-    "eslint-config-google": "^0.12.0",
-    "eslint-config-prettier": "^4.1.0",
+    "eslint": "^6.0.1",
+    "eslint-config-google": "^0.13.0",
+    "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-prettier": "^3.0.1",
     "jsdocs": "^1.0.0",
-    "mocha": "^6.0.2",
+    "mocha": "^6.1.4",
     "mocha-lcov-reporter": "^1.3.0",
     "mos": "^1.3.1",
-    "nyc": "^13.3.0",
-    "prettier": "^1.16.4"
+    "nyc": "^14.1.1",
+    "prettier": "^1.16.4",
+    "sinon": "^7.3.2"
   },
   "snyk": true
 }
