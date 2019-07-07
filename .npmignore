@@ -31,5 +31,6 @@ test/
 .eslintrc.js
 .jsdoc.js
 .prettierrc.js
+.DS_Store
 CODE_OF_CONDUCT.md
 nedbdata/
