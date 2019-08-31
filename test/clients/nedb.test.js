@@ -2,7 +2,11 @@
 
 /* global describe before beforeEach afterEach, after, it */
 
+const sinon = require('sinon');
 const { expect } = require('chai');
+const Nedb = require('nedb');
+const proxyquire = require('proxyquire');
+
 const { connect, Document, Client } = require('../../index');
 const getData1 = require('../util').data1;
 const getData2 = require('../util').data2;
@@ -12,6 +16,15 @@ const { isNativeId } = require('../../lib/validate');
 const chaiAsPromised = require('chai-as-promised');
 
 const chai = require('chai');
+
+const sandbox = sinon.createSandbox();
+const db = sandbox.createStubInstance(Nedb);
+
+proxyquire('nedb', {
+  nedb: function() {
+    return db;
+  }
+});
 
 chai.use(chaiAsPromised);
 
@@ -32,7 +45,10 @@ describe('Base NeDB Client', () => {
     done();
   });
 
-  afterEach(() => database.dropDatabase());
+  afterEach(() => {
+    sandbox.restore();
+    database.dropDatabase();
+  });
 
   after(() => database.dropDatabase());
 
@@ -60,6 +76,30 @@ describe('Base NeDB Client', () => {
 
   describe('#delete()', () => {
     it('should reject if it can not delete the object', done => {
+      let data = getData1();
+
+      data
+        .save()
+        .then(() => {
+          validateId(data);
+          validateData1(data);
+          data._id = {};
+          return Client().delete('Datas', { $nin: -2 });
+        })
+        .then(function(result) {
+          expect.fail(null, Error, 'Expected error, but got none.');
+        })
+        .catch(function(error) {
+          expect(error instanceof Error).to.be.true;
+        })
+        .then(done, done);
+    });
+    it('should reject if the nedb client throws an error', done => {
+      sandbox.stub(db, 'remove').callsFake(callback => {
+        console.log('called');
+        let error = Error('sinon mock error');
+        return callback(error, null);
+      });
       let data = getData1();
 
       data
