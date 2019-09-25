@@ -33,9 +33,10 @@ describe('Base MongoDB Client', () => {
   });
 
   afterEach(done => {
-    
     sandbox.restore();
-    return done();
+    setTimeout(() => {
+      return done();
+    }, 1000);
   });
 
   after(() => database.dropDatabase());
