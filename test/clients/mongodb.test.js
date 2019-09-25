@@ -36,7 +36,7 @@ describe('Base MongoDB Client', () => {
     sandbox.restore();
     setTimeout(() => {
       return done();
-    }, 1000);
+    }, 200);
   });
 
   after(() => database.dropDatabase());
@@ -46,7 +46,7 @@ describe('Base MongoDB Client', () => {
       sandbox.restore();
       setTimeout(() => {
         return done();
-      }, 1000);
+      }, 200);
     });
 
     it('should reject if it can not update the object', done => {
@@ -74,7 +74,7 @@ describe('Base MongoDB Client', () => {
       sandbox.restore();
       setTimeout(() => {
         return done();
-      }, 1000);
+      }, 200);
     });
 
     it('should reject if it can not delete the object', done => {
@@ -102,7 +102,7 @@ describe('Base MongoDB Client', () => {
       sandbox.restore();
       setTimeout(() => {
         return done();
-      }, 1000);
+      }, 200);
     });
 
     it('should reject if it can not delete the object', done => {
@@ -130,7 +130,7 @@ describe('Base MongoDB Client', () => {
       sandbox.restore();
       setTimeout(() => {
         return done();
-      }, 1000);
+      }, 200);
     });
 
     it('should reject if it can not delete the object', done => {
@@ -158,7 +158,7 @@ describe('Base MongoDB Client', () => {
       sandbox.restore();
       setTimeout(() => {
         return done();
-      }, 1000);
+      }, 200);
     });
     it('should reject if it can not delete the object', done => {
       let data = getData1();
@@ -185,7 +185,7 @@ describe('Base MongoDB Client', () => {
       sandbox.restore();
       setTimeout(() => {
         return done();
-      }, 1000);
+      }, 200);
     });
     it('should reject if mongo rejects', function(done) {
       sandbox.stub(Client()._mongo, 'dropDatabase').callsFake(callback => {
@@ -205,7 +205,7 @@ describe('Base MongoDB Client', () => {
       sandbox.restore();
       setTimeout(() => {
         return done();
-      }, 1000);
+      }, 200);
     });
     it('should reject an invalid count query', function(done) {
       let data = getData1();
@@ -229,7 +229,7 @@ describe('Base MongoDB Client', () => {
       sandbox.restore();
       setTimeout(() => {
         return done();
-      }, 1000);
+      }, 200);
     });
     it('should reject an invalid findOneAndDelete query', function(done) {
       let data = getData1();
@@ -269,7 +269,7 @@ describe('Base MongoDB Client', () => {
       sandbox.restore();
       setTimeout(() => {
         return done();
-      }, 1000);
+      }, 200);
     });
     it('should reject an invalid findOneAndUpdate query', function(done) {
       let data = getData1();
@@ -309,7 +309,7 @@ describe('Base MongoDB Client', () => {
       sandbox.restore();
       setTimeout(() => {
         return done();
-      }, 1000);
+      }, 200);
     });
     it('should reject an invalid findOneAndDelete query', function(done) {
       let data = getData1();
@@ -352,7 +352,7 @@ describe('MongoDB Client', () => {
     database.dropDatabase();
     setTimeout(() => {
       return done();
-    }, 1000);
+    }, 200);
   });
 
   after(() => database.dropDatabase());
@@ -832,7 +832,6 @@ describe('MongoDB Client', () => {
     it('should sort results in ascending order', done => {
       City.find({}, { sort: 'population' })
         .then(cities => {
-          console.log(cities);
           expect(cities).to.have.length(3);
           validateId(cities[0]);
           validateId(cities[1]);
