@@ -1,11 +1,14 @@
 language: node_js
+dist: trusty
 node_js:
   - node
-install:
-- npm install
-services:
-  - mongodb
 before_script:
-- node --version
-- npm --version
+  - sleep 15
+services: mongodb
+install:
+  - npm install
+before_script:
+  - mongo --version
+  - node --version
+  - npm --version
 after_success: npm run coverage

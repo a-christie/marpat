@@ -33,14 +33,22 @@ describe('Base MongoDB Client', () => {
   });
 
   afterEach(done => {
-    
     sandbox.restore();
-    return done();
+    setTimeout(() => {
+      return done();
+    }, 200);
   });
 
   after(() => database.dropDatabase());
 
   describe('#save()', () => {
+    afterEach(done => {
+      sandbox.restore();
+      setTimeout(() => {
+        return done();
+      }, 200);
+    });
+
     it('should reject if it can not update the object', done => {
       let data = getData1();
 
@@ -62,6 +70,13 @@ describe('Base MongoDB Client', () => {
     });
   });
   describe('#deleteMany()', () => {
+    afterEach(done => {
+      sandbox.restore();
+      setTimeout(() => {
+        return done();
+      }, 200);
+    });
+
     it('should reject if it can not delete the object', done => {
       let data = getData1();
 
@@ -83,6 +98,13 @@ describe('Base MongoDB Client', () => {
     });
   });
   describe('#delete()', () => {
+    afterEach(done => {
+      sandbox.restore();
+      setTimeout(() => {
+        return done();
+      }, 200);
+    });
+
     it('should reject if it can not delete the object', done => {
       let data = getData1();
 
@@ -104,6 +126,13 @@ describe('Base MongoDB Client', () => {
     });
   });
   describe('#deleteOne()', () => {
+    afterEach(done => {
+      sandbox.restore();
+      setTimeout(() => {
+        return done();
+      }, 200);
+    });
+
     it('should reject if it can not delete the object', done => {
       let data = getData1();
 
@@ -125,6 +154,12 @@ describe('Base MongoDB Client', () => {
     });
   });
   describe('#findOne()', () => {
+    afterEach(done => {
+      sandbox.restore();
+      setTimeout(() => {
+        return done();
+      }, 200);
+    });
     it('should reject if it can not delete the object', done => {
       let data = getData1();
 
@@ -146,6 +181,12 @@ describe('Base MongoDB Client', () => {
     });
   });
   describe('#dropDatabase()', () => {
+    afterEach(done => {
+      sandbox.restore();
+      setTimeout(() => {
+        return done();
+      }, 200);
+    });
     it('should reject if mongo rejects', function(done) {
       sandbox.stub(Client()._mongo, 'dropDatabase').callsFake(callback => {
         let error = Error('sinon mock error');
@@ -160,6 +201,12 @@ describe('Base MongoDB Client', () => {
     });
   });
   describe('#count()', () => {
+    afterEach(done => {
+      sandbox.restore();
+      setTimeout(() => {
+        return done();
+      }, 200);
+    });
     it('should reject an invalid count query', function(done) {
       let data = getData1();
 
@@ -178,6 +225,12 @@ describe('Base MongoDB Client', () => {
     });
   });
   describe('#findOneAndDelete()', () => {
+    afterEach(done => {
+      sandbox.restore();
+      setTimeout(() => {
+        return done();
+      }, 200);
+    });
     it('should reject an invalid findOneAndDelete query', function(done) {
       let data = getData1();
 
@@ -212,6 +265,12 @@ describe('Base MongoDB Client', () => {
     });
   });
   describe('#findOneAndupdate()', () => {
+    afterEach(done => {
+      sandbox.restore();
+      setTimeout(() => {
+        return done();
+      }, 200);
+    });
     it('should reject an invalid findOneAndUpdate query', function(done) {
       let data = getData1();
 
@@ -246,6 +305,12 @@ describe('Base MongoDB Client', () => {
     });
   });
   describe('#clearCollection()', () => {
+    afterEach(done => {
+      sandbox.restore();
+      setTimeout(() => {
+        return done();
+      }, 200);
+    });
     it('should reject an invalid findOneAndDelete query', function(done) {
       let data = getData1();
 
@@ -282,9 +347,12 @@ describe('MongoDB Client', () => {
     done();
   });
 
-  afterEach(() => {
+  afterEach(done => {
     sandbox.restore();
     database.dropDatabase();
+    setTimeout(() => {
+      return done();
+    }, 200);
   });
 
   after(() => database.dropDatabase());
@@ -702,6 +770,11 @@ describe('MongoDB Client', () => {
       Quahog = City.create({
         name: 'Quahog',
         population: 800
+      });
+
+      afterEach(done => {
+        sandbox.restore();
+        return done();
       });
 
       Promise.all([Springfield.save(), SouthPark.save(), Quahog.save()]).then(
