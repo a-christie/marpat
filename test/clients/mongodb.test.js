@@ -704,6 +704,11 @@ describe('MongoDB Client', () => {
         population: 800
       });
 
+      afterEach(done => {
+        sandbox.restore();
+        return done();
+      });
+
       Promise.all([Springfield.save(), SouthPark.save(), Quahog.save()]).then(
         () => {
           validateId(Springfield);
@@ -759,6 +764,7 @@ describe('MongoDB Client', () => {
     it('should sort results in ascending order', done => {
       City.find({}, { sort: 'population' })
         .then(cities => {
+          console.log(cities);
           expect(cities).to.have.length(3);
           validateId(cities[0]);
           validateId(cities[1]);
