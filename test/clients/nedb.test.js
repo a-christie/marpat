@@ -6,7 +6,7 @@ const sinon = require('sinon');
 const { expect } = require('chai');
 const Nedb = require('nedb');
 const proxyquire = require('proxyquire');
-
+const fs = require('fs');
 const { connect, Document, Client } = require('../../index');
 const getData1 = require('../util').data1;
 const getData2 = require('../util').data2;
@@ -1205,7 +1205,7 @@ describe('NeDB In Memory Capabilities', () => {
 describe('NeDB File System Capabilities', function() {
   const url = 'nedb://nedbdata';
   let database;
-  before(function(done) {
+  beforeEach(function(done) {
     connect(url)
       .then(function(db) {
         database = db;
@@ -1269,8 +1269,26 @@ describe('NeDB File System Capabilities', function() {
       done();
     });
   });
-  it('should not delete files if there are no collections', () => {
-    return expect(() => database.dropDatabase()).to.not.throw();
+  it('should not delete files if there are no collections', done => {
+    class Person extends Document {
+      constructor() {
+        super();
+        this.schema({
+          name: {
+            type: String
+          }
+        });
+      }
+    }
+    let person = Person.create({ name: 'Han Solo' });
+    person.save().then(person => {
+      fs.unlink('nedbdata/persons.db', function(error) {
+        console.log('removed');
+        if (error) console.log(error);
+        expect(() => database.dropDatabase()).to.not.throw();
+        done();
+      });
+    });
   });
 });
 
