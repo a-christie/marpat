@@ -1,18 +1,9 @@
 language: node_js
 node_js:
   - node
+services: mongodb
 install:
-- npm install
-addons:
-  apt:
-    sources:
-      - mongodb-upstart
-      - mongodb-3.0-precise
-    packages:
-      - mongodb-org-server
-      - mongodb-org-shell
-before_script:
-  - sleep 15
+  - npm install
 before_script:
   - mongo --version
   - node --version
