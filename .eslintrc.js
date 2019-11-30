@@ -10,6 +10,15 @@ module.exports = {
 	plugins: ['prettier'],
 	extends: ['google', 'eslint:recommended', 'prettier'],
 	rules: {
+		'new-cap': 0,
+		'require-jsdoc': [
+			'error',
+			{
+				require: {
+					ArrowFunctionExpression: true
+				}
+			}
+		],
 		'prettier/prettier': 'error'
 	}
 };
