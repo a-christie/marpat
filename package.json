@@ -52,6 +52,7 @@
     "snyk": "^1.235.1"
   },
   "optionalDependencies": {
+    "firebase-admin": "^8.8.0",
     "mongodb": "^3.3.2",
     "nedb": "1.8.0"
   },
