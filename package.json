@@ -47,7 +47,7 @@
     ]
   },
   "dependencies": {
-    "@hapi/joi": "^16.1.7",
+    "@hapi/joi": "^16.1.8",
     "lodash": "^4.17.15",
     "snyk": "^1.258.2"
   },
