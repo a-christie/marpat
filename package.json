@@ -12,6 +12,7 @@
     "test-mongo-client": "nyc _mocha  ./test/clients/mongodb.test.js --timeout=30000 --exit",
     "test-nedb-client": "nyc _mocha  ./test/clients/nedb.test.js --timeout=30000 --exit",
     "report": "nyc report --reporter=html",
+    "examples": "node examples/firebase.js",
     "coverage": "nyc report --reporter=html --reporter=text-lcov | coveralls",
     "generate-docs": "mos",
     "snyk-protect": "snyk protect",
@@ -48,6 +49,7 @@
   },
   "dependencies": {
     "@hapi/joi": "^16.1.7",
+    "flat": "^5.0.0",
     "lodash": "^4.17.15",
     "snyk": "^1.235.1"
   },
