@@ -1,33 +1,46 @@
 const admin = require('firebase-admin');
-const Joi = require('@hapi/joi');
-const { connect, Document } = require('../index');
+const { connect } = require('../index');
+const { Ghost, Ghostbuster, Location } = require('./models');
 const serviceAccount = require('./service-account.json');
 
 connect({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: 'https://marpat-c037f.firebaseio.com'
+  credential: admin.credential.cert(serviceAccount)
 })
   .then(db => {
-    class Ghostbuster extends Document {
-      constructor() {
-        super();
-        this.schema({
-          name: {
-            type: Object,
-            validate: Joi.object().keys({
-              first: Joi.string(),
-              last: Joi.object().keys({ middle: Joi.string().required() })
-            })
-          },
-          email: Joi.string().required()
-        });
-      }
-    }
-    const venkman = Ghostbuster.create({
-      name: { first: 'Peter', last: { middle: true } }
+    const ghostbuster = Ghostbuster.create({
+      name: { first: 'Peter', last: 'Venkman' },
+      email: 'pvenkman@ghostbusters.com'
     });
-    console.log(venkman);
-    return venkman.save();
+
+    const location = Location.create({
+      name: 'ballroom'
+    });
+
+    const ghost = Ghost.create({
+      name: 'slimer',
+      malevolence: 0
+    });
+
+    return Promise.all([location.save(), ghostbuster.save(), ghost.save()]);
   })
-  .then(ghostbuster => console.log(ghostbuster))
-  .catch(error => console.log('error', error.message));
+  .then(results => {
+    const ballroom = results[0];
+    const venkman = results[1];
+    const slimer = results[2];
+    slimer.haunt(ballroom);
+    venkman.trapped.push(slimer);
+    console.log('trapped', venkman);
+    return Promise.all([ballroom.save(), venkman.save(), slimer.save()]);
+  })
+  .then(results => {
+    const ballroom = results[0];
+    const venkman = results[1];
+    console.log(venkman);
+    const slimer = results[2];
+    return Ghostbuster.findOneAndUpdate(['name.first', '==', 'Peter'], {
+      name: { first: 'Peter', last: 'Venkman' },
+      email: 'egon@ghostbusters.com'
+    });
+  })
+  .then(results => console.log(results))
+  .catch(error => console.log('error', error));
