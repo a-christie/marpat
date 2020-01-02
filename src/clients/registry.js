@@ -4,7 +4,7 @@ const NeDbClient = require('./nedbclient');
 const MongoClient = require('./mongoclient');
 const FirestoreClient = require('./firebaseclient')
 
-class ClientRegistry {
+class Registry {
   constructor() {
     this.clients = [NeDbClient, MongoClient, FirestoreClient];
   }
@@ -21,4 +21,4 @@ class ClientRegistry {
   }
 }
 
-module.exports = new ClientRegistry();
+module.exports = new Registry();

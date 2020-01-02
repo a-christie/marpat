@@ -18,12 +18,36 @@ const addWhereToRef = (ref, where) => {
   return ref.where(...where);
 };
 
+const mapValuesDeep = (obj, fn) =>
+  _.mapValues(obj, (val, key) =>
+    _.isPlainObject(val) ? mapValuesDeep(val, fn) : fn(val, key, obj)
+  );
+
 const convertQuery = query => {
-  console.log('query conversion', query);
-  if (query._id && _.has(query._id, '$in')) {
-    return ['_id', '==', query._id];
+  const queries = [];
+  const ids = [];
+
+  if (Array.isArray(query)) {
+    queries.push(query);
+  } else {
+    mapValuesDeep(flatten(query), (value, key, obj) => {
+      if (key === '_id') {
+        ids.push(value);
+      } else if (key.includes('$in')) {
+        const parent = key.split('$in')[0].replace('.', '');
+        if (parent === '_id') {
+          ids.push(value);
+        } else if (Array.isArray(value)) {
+          value.map(query => [parent, '==', value]);
+          queries.push(value);
+        } else {
+          queries.push([parent, '==', value]);
+        }
+      }
+    });
   }
-  return [];
+
+  return { queries, ids };
 };
 
 /**
@@ -244,40 +268,31 @@ class FirestoreClient extends DatabaseClient {
    * @return {Promise}
    */
   find(collection, query, options) {
+    console.log(options);
     const that = this;
-    const queries = [];
-    const flatQuery = flatten(query);
-    console.log(flatQuery);
-    const mapValuesDeep = (obj, fn) =>
-      _.mapValues(obj, (val, key) =>
-        _.isPlainObject(val) ? mapValuesDeep(val, fn) : fn(val, key, obj)
-      );
-
-    mapValuesDeep(flatQuery, (value, key, obj) => {
-      console.log({ key, value });
-      if (key.includes('$in')) {
-        const parent = key.split('$in')[0].replace('.', '');
-        console.log(parent);
-        if (value.length) {
-          value.map(query => [parent, '===', value]);
-          queries.concat(value);
-        }
-      }
-    });
-    console.log(queries);
-    const where = convertQuery(query);
+    const { queries, ids } = convertQuery(query);
     return new Promise((resolve, reject) => {
       const reference = that._firestore.collection(collection);
-      const query = addWhereToRef(reference, where);
-      // console.log(options.sort)
-      // console.log(options.limit)
-      // console.log(options.skip)
-      query
-        .get()
-        .then(snapshot => {
-          console.log('empty', snapshot.empty);
-          resolve(snapshot);
-        })
+      Promise.all([
+        ...queries.map(where => {
+          let query = addWhereToRef(reference, where);
+          return query
+            .get()
+            .then(snapshot =>
+              snapshot.empty
+                ? []
+                : snapshot.docs.map(doc => ({ _id: doc.id, ...doc.data() }))
+            );
+        }),
+        ...ids.map(_id =>
+          reference
+            .doc(_id)
+            .get()
+            .then(snapshot => ({ _id, ...snapshot.data() }))
+        )
+      ])
+        .then(docs => _.flatten(docs))
+        .then(docs => resolve(docs))
         .catch(error => reject(error));
     });
   }
@@ -342,7 +357,9 @@ class FirestoreClient extends DatabaseClient {
    */
   close() {
     const that = this;
-    return new Promise((resolve, reject) => that._admin.close(() => resolve()));
+    return new Promise((resolve, reject) =>
+      that._admin.delete(() => resolve())
+    );
   }
 
   /**
@@ -353,11 +370,16 @@ class FirestoreClient extends DatabaseClient {
    */
   clearCollection(collection) {
     const that = this;
+    const db = that._firestore.collection(collection);
     return new Promise((resolve, reject) => {
-      that._firestore.dropCollection(collection, (error, result) => {
-        if (error) return reject(error);
-        return resolve();
+      db.get().then(snapshot => {
+        if (snapshot.empty) {
+          resolve();
+        } else {
+          Promise.all(snapshot.docs.forEach(doc => doc.delete())).then(result=>resolve());
+        }
       });
+
     });
   }
 

@@ -1,6 +1,6 @@
 'use strict';
 
-const ClientRegistry = require('./clients/registry');
+const Registry = require('./clients/registry');
 const { ConnectionError } = require('./errors');
 
 /**
@@ -12,7 +12,7 @@ const { ConnectionError } = require('./errors');
  * @see  {@link ClientRegistry}
  */
 const connect = (url, options) => {
-  const Client = ClientRegistry.getClient(url);
+  const Client = Registry.getClient(url);
 
   if (!Client) {
     return Promise.reject(
