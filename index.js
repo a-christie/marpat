@@ -1,13 +1,12 @@
 'use strict';
 
-const { connect, Client, Document, EmbeddedDocument } = require('./lib');
-const { ClientRegistry, DatabaseClient } = require('./lib');
+const { connect, Client, Registry, DatabaseClient, Document, EmbeddedDocument } = require('./src');
 
 module.exports = {
   connect,
   Client,
   Document,
   EmbeddedDocument,
-  ClientRegistry,
+  Registry,
   DatabaseClient
 };

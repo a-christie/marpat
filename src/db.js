@@ -9,7 +9,7 @@ const { ConnectionError } = require('./errors');
  * @param {String} url the url to use to establish a connection to the datastore.
  * @param {Object} [options] Options used to modify the connection to the datastore.
  * @return {Promise} a promise which resolves with a connected datastore or rejects with an error.
- * @see  {@link ClientRegistry}
+ * @see  {@link Registry}
  */
 const connect = (url, options) => {
   const Client = Registry.getClient(url);

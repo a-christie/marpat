@@ -5,10 +5,10 @@
 const { expect } = require('chai');
 
 const DatabaseClient = require('../../lib/clients/client');
-const clientRegistry = require('../../lib/clients/registry');
+const Registry = require('../../lib/clients/registry');
 
 describe('Client Registry', function() {
-  afterEach(() => clientRegistry.clients.splice(2));
+  afterEach(() => Registry.clients.splice(2));
 
   describe('#add', function() {
     it('should add a new client', function() {
@@ -19,9 +19,9 @@ describe('Client Registry', function() {
         }
       }
 
-      clientRegistry.add(Client);
+      Registry.add(Client);
 
-      expect(clientRegistry.clients.indexOf(Client)).to.be.not.equal(-1);
+      expect(Registry.clients.indexOf(Client)).to.be.not.equal(-1);
     });
 
     it('should return the given client', function() {
@@ -36,9 +36,9 @@ describe('Client Registry', function() {
         }
       }
 
-      clientRegistry.add(Client);
+      Registry.add(Client);
 
-      expect(clientRegistry.getClient('foo://')).to.be.equal(Client);
+      expect(Registry.getClient('foo://')).to.be.equal(Client);
     });
 
     it('should return the default client for nedb', function() {
@@ -53,9 +53,9 @@ describe('Client Registry', function() {
         }
       }
 
-      clientRegistry.add(Client);
+      Registry.add(Client);
 
-      expect(clientRegistry.getClient('nedb://').name).to.be.equal(
+      expect(Registry.getClient('nedb://').name).to.be.equal(
         'NeDbClient'
       );
     });
@@ -72,9 +72,9 @@ describe('Client Registry', function() {
         }
       }
 
-      clientRegistry.add(Client);
+      Registry.add(Client);
 
-      expect(clientRegistry.getClient('mongodb://').name).to.be.equal(
+      expect(Registry.getClient('mongodb://').name).to.be.equal(
         'MongoDbClient'
       );
     });
