@@ -29,18 +29,18 @@ connect({
     const slimer = results[2];
     slimer.haunt(ballroom);
     venkman.trapped.push(slimer);
-    console.log('trapped', venkman);
     return Promise.all([ballroom.save(), venkman.save(), slimer.save()]);
   })
   .then(results => {
     const ballroom = results[0];
     const venkman = results[1];
-    console.log(venkman);
     const slimer = results[2];
     return Ghostbuster.findOneAndUpdate(['name.first', '==', 'Peter'], {
       name: { first: 'Peter', last: 'Venkman' },
       email: 'egon@ghostbusters.com'
     });
   })
-  .then(results => console.log(results))
+  .then(results =>
+    Ghostbuster.find(['name.first', '==', 'Peter'])
+  ).then(ghostbuster=>console.log(ghostbuster[0]))
   .catch(error => console.log('error', error));
