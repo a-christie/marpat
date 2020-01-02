@@ -23,11 +23,9 @@ class Ghostbuster extends Document {
 
   trap({ name }, location) {
     return Ghost.findOne(['name', '==', 'slimer']).then(ghost => {
-      console.log('trap query result', ghost);
       if (!ghost) {
         return new Error('No Ghost');
       } else {
-        console.log('trapped',this.trapped)
         this.trapped.push(ghost);
         ghost.trapped = true;
         return Promise.all([this.save()]);
