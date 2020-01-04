@@ -2,53 +2,13 @@
 
 const _ = require('lodash');
 const admin = require('firebase-admin');
-const flatten = require('flat');
 const DatabaseClient = require('./client');
-const { deepTraverse } = require('../util');
-
-const addWhereToRef = (ref, where) => {
-  if (!Array.isArray(where)) {
-    throw new Error('where parameter must be an array.');
-  }
-
-  if (Array.isArray(where[0])) {
-    return where.reduce((acc, whereArgs) => addWhereToRef(acc, whereArgs), ref);
-  }
-
-  return ref.where(...where);
-};
-
-const mapValuesDeep = (obj, fn) =>
-  _.mapValues(obj, (val, key) =>
-    _.isPlainObject(val) ? mapValuesDeep(val, fn) : fn(val, key, obj)
-  );
-
-const convertQuery = query => {
-  const queries = [];
-  const ids = [];
-
-  if (Array.isArray(query)) {
-    queries.push(query);
-  } else {
-    mapValuesDeep(flatten(query), (value, key, obj) => {
-      if (key === '_id') {
-        ids.push(value);
-      } else if (key.includes('$in')) {
-        const parent = key.split('$in')[0].replace('.', '');
-        if (parent === '_id') {
-          ids.push(value);
-        } else if (Array.isArray(value)) {
-          value.map(query => [parent, '==', value]);
-          queries.push(value);
-        } else {
-          queries.push([parent, '==', value]);
-        }
-      }
-    });
-  }
-
-  return { queries, ids };
-};
+const {
+  addWhereToRef,
+  addOptionsToRef,
+  convertQuery,
+  mapValuesDeep
+} = require('../utilities');
 
 /**
  * @class MongoDbClient
@@ -364,22 +324,23 @@ class FirestoreClient extends DatabaseClient {
 
   /**
    * @method  clearCollection
-   * @description Drops a specific collection.
+   * @description The clearCollection method removes a specific collection from firestore.
+   * method uses a single batch commit to remove all docs 
    * @param {String} collection
    * @return {Promise}
    */
   clearCollection(collection) {
     const that = this;
     const db = that._firestore.collection(collection);
+    const batch = that._firestore.batch();
     return new Promise((resolve, reject) => {
-      db.get().then(snapshot => {
-        if (snapshot.empty) {
-          resolve();
-        } else {
-          Promise.all(snapshot.docs.forEach(doc => doc.delete())).then(result=>resolve());
-        }
-      });
-
+      db.get().then(snapshot =>
+        snapshot.empty
+          ? resolve(snapshot.size)
+          : Promise.all([snapshot.docs.forEach(doc => batch.delete(doc.ref))])
+              .then(result => batch.commit())
+              .then(() => resolve(snapshot.size))
+      );
     });
   }
 
