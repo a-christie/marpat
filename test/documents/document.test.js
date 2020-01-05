@@ -4,8 +4,8 @@
 
 const { expect } = require('chai');
 const { connect, Document } = require('../../index');
-const { isDocument } = require('../../lib/validate');
-const { ValidationError } = require('../../lib/errors');
+const { isDocument } = require('../../src/utilities');
+const { ValidationError } = require('../../src/errors');
 const { Data } = require('../mocks');
 const { validateId, fail, expectError } = require('../util');
 

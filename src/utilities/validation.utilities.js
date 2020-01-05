@@ -1,7 +1,7 @@
 'use strict';
 
 const _ = require('lodash');
-const { Client } = require('./clients');
+const { Client } = require('../clients');
 
 /**
  * Lodash utilities

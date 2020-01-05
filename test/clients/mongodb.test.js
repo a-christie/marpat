@@ -11,7 +11,7 @@ const getData1 = require('../util').data1;
 const getData2 = require('../util').data2;
 const { Address, Pet, User } = require('../mocks');
 const { validateData1, validateId } = require('../util');
-const { isNativeId } = require('../../lib/validate');
+const { isNativeId } = require('../../src/utilities');
 
 const sandbox = sinon.createSandbox();
 

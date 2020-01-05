@@ -3,8 +3,7 @@
 const _ = require('lodash');
 const { MongoClient, ObjectId } = require('mongodb');
 const DatabaseClient = require('./client');
-const { isObject } = require('../validate');
-const { deepTraverse } = require('../util');
+const { deepTraverse, isObject } = require('../utilities');
 
 /**
  * @class MongoDbClient

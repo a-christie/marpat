@@ -14,7 +14,7 @@ const {
   isNumber,
   isDate,
   isFunction
-} = require('./validate');
+} = require('./utilities');
 const { ValidationError } = require('./errors');
 
 /**

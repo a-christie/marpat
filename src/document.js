@@ -3,7 +3,7 @@
 const _ = require('lodash');
 const { Client } = require('./clients');
 const BaseDocument = require('./base-document');
-const { isArray, isReferenceable, isEmbeddedDocument } = require('./validate');
+const { isArray, isReferenceable, isEmbeddedDocument } = require('./utilities');
 
 class Document extends BaseDocument {
   constructor(name) {

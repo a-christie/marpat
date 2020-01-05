@@ -3,7 +3,7 @@
 /* global describe it */
 
 const { expect } = require('chai');
-const { deepTraverse } = require('../lib/util');
+const { deepTraverse } = require('../src/utilities');
 
 describe('Utilities', function() {
   describe('deepTraverse()', function() {

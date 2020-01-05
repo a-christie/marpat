@@ -12,7 +12,7 @@ const getData1 = require('../util').data1;
 const getData2 = require('../util').data2;
 const { validateData1, validateId } = require('../util');
 const { Address, Pet, User, Data } = require('../mocks');
-const { isNativeId } = require('../../lib/validate');
+const { isNativeId } = require('../../src/utilities');
 const chaiAsPromised = require('chai-as-promised');
 
 const chai = require('chai');

@@ -4,7 +4,7 @@
 
 const { expect } = require('chai');
 const { connect } = require('../../index');
-const BaseDocument = require('../../lib/base-document');
+const BaseDocument = require('../../src/base-document');
 
 describe('Base Document', function() {
   const url = 'nedb://memory';

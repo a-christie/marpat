@@ -4,7 +4,7 @@
 
 const { expect } = require('chai');
 const { Document, EmbeddedDocument, connect } = require('../../index');
-const { ValidationError } = require('../../lib/errors');
+const { ValidationError } = require('../../src/errors');
 const { validateId } = require('../util');
 
 describe('Embedded', function() {

@@ -4,7 +4,7 @@
 
 const { expect } = require('chai');
 const { EmbeddedDocument, Document } = require('../index.js');
-const { isType, isSupportedType, isValidType } = require('../lib/validate');
+const { isType, isSupportedType, isValidType } = require('../src/utilities');
 
 describe('Validation Utility Tests', () => {
   it('should throw an error if the type is unsupported', () =>

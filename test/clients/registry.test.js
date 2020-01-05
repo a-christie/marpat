@@ -4,8 +4,8 @@
 
 const { expect } = require('chai');
 
-const DatabaseClient = require('../../lib/clients/client');
-const Registry = require('../../lib/clients/registry');
+const DatabaseClient = require('../../src/clients/client');
+const Registry = require('../../src/clients/registry');
 
 describe('Client Registry', function() {
   afterEach(() => Registry.clients.splice(2));
