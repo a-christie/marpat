@@ -1,9 +1,8 @@
 'use strict';
 
 /*
- * Base Camo error.
- * 
- * Adapted from es6-error package.
+ * @class MarpatError
+ * @description an extension of the error class. THis error is used as the base marpat error.
  */
 class MarpatError extends Error {
   constructor(message) {
@@ -19,12 +18,12 @@ class MarpatError extends Error {
       enumerable: false,
       value: this.constructor.name
     });
-    
   }
 }
 
 /*
- * Error indicating document didn't pass validation.
+ * @class ValidationError
+ * @description an error indicating document didn't pass validation.
  */
 class ValidationError extends MarpatError {
   constructor(message) {
@@ -32,8 +31,8 @@ class ValidationError extends MarpatError {
   }
 }
 
-/*
- * Error indicating document didn't pass validation.
+/* @class ConnectionError
+ * @description An error indicating a connection to a data-store could not be made.
  */
 class ConnectionError extends MarpatError {
   constructor(message) {
