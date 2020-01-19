@@ -181,20 +181,19 @@ const isSupportedType = t =>
  * @see  {@link isNativeId}
  */
 const isType = (value, type) => {
-  console.log('is type', { value, type });
-  if (type === String) {
+  if (type === String || type === 'string') {
     return isString(value);
-  } else if (type === Number) {
+  } else if (type === Number || type === 'number') {
     return isNumber(value);
-  } else if (type === Boolean) {
+  } else if (type === Boolean || type === 'boolean') {
     return isBoolean(value);
-  } else if (type === Buffer) {
+  } else if (type === Buffer || type === 'binary') {
     return isBuffer(value);
-  } else if (type === Date) {
+  } else if (type === Date || type === 'date') {
     return isDate(value);
-  } else if (type === Array || isArray(type)) {
+  } else if (type === Array || isArray(type) || type === 'array') {
     return isArray(value);
-  } else if (type === Object) {
+  } else if (type === Object || type === 'object') {
     return isObject(value);
   } else if (type.documentClass && type.documentClass() === 'document') {
     return isDocument(value) || Client().isNativeId(value);
