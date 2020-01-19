@@ -37,10 +37,15 @@ connect({
     const slimer = results[2];
     return Ghostbuster.findOneAndUpdate(['name.first', '==', 'Peter'], {
       name: { first: 'Peter', last: 'Venkman' },
-      email: 'egon@ghostbusters.com'
+      email: 'v-man@ghostbusters.com'
     });
+    return Promise.all([ballroom.save(), venkman.save(), slimer.save()]);
   })
-  .then(results =>
-    Ghostbuster.find(['name.first', '==', 'Peter'])
-  ).then(ghostbuster=>console.log(ghostbuster[0]))
+  .then(results => Ghostbuster.find(['name.first', '==', 'Peter']))
+  .then(ghostbuster => console.log(ghostbuster[0]))
+  .then(ghostbuster => {
+    Ghostbuster.deleteOne(['name.first', '==', 'Peter']).then(response =>
+      console.log(response)
+    );
+  })
   .catch(error => console.log('error', error));
