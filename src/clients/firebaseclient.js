@@ -9,7 +9,7 @@ const {
   convertQuery,
   mapValuesDeep
 } = require('../utilities');
-
+const { QueryError } = require('../errors');
 /**
  * @class MongoDbClient
  * @classdesc The class used to integrate with Mongodb
@@ -89,18 +89,27 @@ class FirestoreClient extends DatabaseClient {
    * @method deleteOne
    * @description Delete one document by query
    * @param {String} collection Collection's name
-   * @param {Object} query Query
+   * @param {Object|Array} where Query
    * @return {Promise}
    */
-  deleteOne(collection, query) {
+  deleteOne(collection, where) {
     const that = this;
-    query = castQueryIds(query);
+
     return new Promise((resolve, reject) => {
-      const db = that._firestore.collection(collection);
-      db.deleteOne(query, { w: 1 }, (error, result) => {
-        if (error) return reject(error);
-        return resolve(result.deletedCount);
-      });
+      const reference = that._firestore.collection(collection);
+      const query = addWhereToRef(reference, where);
+
+      return query
+        .limit(1)
+        .get()
+        .then(snapshot => {
+          if (snapshot.empty) reject(new QueryError('No document to remove'));
+          reference
+            .doc(snapshot.docs[0].id)
+            .delete()
+            .then(() => resolve(1));
+        })
+        .catch(error => reject(error));
     });
   }
 
@@ -127,7 +136,7 @@ class FirestoreClient extends DatabaseClient {
    * @method  findOne
    * @description Find one document
    * @param {String} collection Collection's name
-   * @param {Object} query Query
+   * @param {Object|Array} where Query
    * @return {Promise}
    */
   findOne(collection, where) {
@@ -228,14 +237,14 @@ class FirestoreClient extends DatabaseClient {
    * @return {Promise}
    */
   find(collection, query, options) {
-    console.log(options);
     const that = this;
     const { queries, ids } = convertQuery(query);
     return new Promise((resolve, reject) => {
       const reference = that._firestore.collection(collection);
+
       Promise.all([
         ...queries.map(where => {
-          let query = addWhereToRef(reference, where);
+          const query = addWhereToRef(reference, where);
           return query
             .get()
             .then(snapshot =>
@@ -284,16 +293,14 @@ class FirestoreClient extends DatabaseClient {
    * @param {Object} options Options
    */
   createIndex(collection, field, options) {
-    options.sparse = options.sparse || false;
-
-    const db = this.db.collection(collection);
-
-    const keys = {};
-    keys[field] = 1;
-    db.createIndex(keys, {
-      unique: options.unique,
-      sparse: options.sparse
-    });
+    // options.sparse = options.sparse || false;
+    // const db = this.db.collection(collection);
+    // const keys = {};
+    // keys[field] = 1;
+    // db.createIndex(keys, {
+    //   unique: options.unique,
+    //   sparse: options.sparse
+    // });
   }
 
   /**
@@ -325,7 +332,7 @@ class FirestoreClient extends DatabaseClient {
   /**
    * @method  clearCollection
    * @description The clearCollection method removes a specific collection from firestore.
-   * method uses a single batch commit to remove all docs 
+   * method uses a single batch commit to remove all docs
    * @param {String} collection
    * @return {Promise}
    */
@@ -352,10 +359,10 @@ class FirestoreClient extends DatabaseClient {
   dropDatabase() {
     const that = this;
     return new Promise((resolve, reject) => {
-      that._firestore.dropDatabase((error, result) => {
-        if (error) return reject(error);
-        return resolve();
-      });
+      that._firestore
+        .listCollections()
+        .then(collections => resolve(collections))
+        .catch(error => reject(error));
     });
   }
 
