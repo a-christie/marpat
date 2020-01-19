@@ -40,7 +40,17 @@ class ConnectionError extends MarpatError {
   }
 }
 
+/* @class QueryError
+ * @description An error indicating a connection to a data-store could not be made.
+ */
+class QueryError extends MarpatError {
+  constructor(message) {
+    super(message);
+  }
+}
+
 module.exports = {
   ValidationError,
+  QueryError,
   ConnectionError
 };
