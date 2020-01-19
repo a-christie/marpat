@@ -4,7 +4,7 @@
 
 [![Build Status](https://travis-ci.org/Luidog/fms-api-client.png?branch=master)](https://travis-ci.org/Luidog/marpat) [![Known Vulnerabilities](https://snyk.io/test/github/Luidog/marpat/badge.svg?targetFile=package.json)](https://snyk.io/test/github/Luidog/marpat?targetFile=package.json) [![Coverage Status](https://coveralls.io/repos/github/Luidog/marpat/badge.svg?branch=document-update)](https://coveralls.io/github/Luidog/marpat?branch=document-update) [![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/Luidog/marpat/blob/master/LICENSE.md)
 
-Marpat is lightweight object modeling tool that uses ES6 classes to model data. This project is a fork of [Camo](https://github.com/scottwrobinson/camo). Marpat is designed to be a storage agnostic document collection backend. By default Marpat can connect to [nedb](<>), [mongodb](<>), and [firebase](<>). Additionally, Marpat provides a [Client Registry](<>) and [DocumentClient](<>) class. The client registry and DocumentClient class can be used to use a custom backend.
+Marpat is lightweight object modeling tool that uses ES6 classes to model data. This project is a fork of [Camo](https://github.com/scottwrobinson/camo). Marpat is designed to be a storage agnostic document collection backend. By default Marpat can connect to [nedb](), [mongodb](), and [firebase](). Additionally, Marpat provides a [Client Registry]() and [DocumentClient]() class. The client registry and DocumentClient class can be used to use a custom backend.
 
 ## Jump To
 
@@ -104,17 +104,17 @@ The name of the collection can be set by overriding the `static collectionName()
 
 ```javascript
 this.schema({
-    name: String,
-    valuation: {
-        type: Number,
-        default: 10000000000,
-        min: 0
-    },
-    employees: [String],
-    dateFounded: {
-        type: Date,
-        default: Date.now
-    }
+  name: String,
+  valuation: {
+    type: Number,
+    default: 10000000000,
+    min: 0
+  },
+  employees: [String],
+  dateFounded: {
+    type: Date,
+    default: Date.now
+  }
 });
 ```
 
@@ -164,26 +164,26 @@ To reference another document, just use its class name as the type.
 
 ```javascript
 class Dog extends Document {
-    constructor() {
-        super();
+  constructor() {
+    super();
 
-        this.name = String;
-        this.breed = String;
-    }
+    this.name = String;
+    this.breed = String;
+  }
 }
 
 class Person extends Document {
-    constructor() {
-        super();
+  constructor() {
+    super();
 
-        this.pet = Dog;
-        this.name = String;
-        this.age = String;
-    }
+    this.pet = Dog;
+    this.name = String;
+    this.age = String;
+  }
 
-    static collectionName() {
-        return 'people';
-    }
+  static collectionName() {
+    return 'people';
+  }
 }
 ```
 
@@ -198,26 +198,26 @@ var { Document } = require('Marpat');
 var { EmbeddedDocument } = require('Marpat');
 
 class Money extends EmbeddedDocument {
-    constructor() {
-        super();
+  constructor() {
+    super();
 
-        this.value = {
-            type: Number,
-            choices: [1, 5, 10, 20, 50, 100]
-        };
+    this.value = {
+      type: Number,
+      choices: [1, 5, 10, 20, 50, 100]
+    };
 
-        this.currency = {
-            type: String,
-            default: 'usd'
-        };
-    }
+    this.currency = {
+      type: String,
+      default: 'usd'
+    };
+  }
 }
 
 class Wallet extends Document {
-    constructor() {
-        super();
-        this.contents = [Money];
-    }
+  constructor() {
+    super();
+    this.contents = [Money];
+  }
 }
 
 const wallet = Wallet.create();
@@ -227,7 +227,7 @@ wallet.contents.push(Money.create());
 wallet.contents[1].value = 100;
 
 wallet.save().then(function() {
-    console.log('Both Wallet and Money objects were saved!');
+  console.log('Both Wallet and Money objects were saved!');
 });
 ```
 
@@ -237,12 +237,12 @@ To create a new instance of our document, we need to use the `.create()` method,
 
 ```javascript
 const lassie = Dog.create({
-    name: 'Lassie',
-    breed: 'Collie'
+  name: 'Lassie',
+  breed: 'Collie'
 });
 
 lassie.save().then(function(l) {
-    console.log(l._id);
+  console.log(l._id);
 });
 ```
 
@@ -267,8 +267,8 @@ The `.findOne()` method will return the first document found, even if multiple d
 
 ```javascript
 Dog.findOne({ name: 'Lassie' }).then(function(l) {
-    console.log('Got Lassie!');
-    console.log('Her unique ID is', l._id);
+  console.log('Got Lassie!');
+  console.log('Her unique ID is', l._id);
 });
 ```
 
@@ -278,7 +278,7 @@ Dog.findOne({ name: 'Lassie' }).then(function(l) {
   - `Person.findOne({name: 'Billy'}, {populate: true})` populates all references in `Person` object
   - `Person.findOne({name: 'Billy'}, {populate: ['address', 'spouse']})` populates only 'address' and 'spouse' in `Person` object
   - `select`: removes all properties from the returning data except those that match an array of values, or \_id and \_schema
-  - `Person.findOne({}, {select: ['name']})` returns data with properties \_id, \_schema, and name. 
+  - `Person.findOne({}, {select: ['name']})` returns data with properties \_id, \_schema, and name.
 
 `.find()` currently accepts the following options:
 
@@ -293,14 +293,14 @@ Dog.findOne({ name: 'Lassie' }).then(function(l) {
 - `skip`: Skips the given number of documents and returns the rest
   - `Person.find({}, {skip: 5})` skips the first 5 `Person` objects and returns all others
 - `select`: removes all properties from the returning data except those that match an array of values, or \_id and \_schema
-  - `Person.find({}, {select: ['name']})` returns data with properties \_id, \_schema, and name. 
+  - `Person.find({}, {select: ['name']})` returns data with properties \_id, \_schema, and name.
 
 `.findOneAndUpdate()` currently accepts the following options:
 
 - `populate`: Boolean value to load all or no references.
   - `Person.findOneAndUpdate({name: 'Ben'},{name: 'Ben Danger'},{lastName: 'Smith'}, {populate: true})` populates all references in `Person` object
 - `select`: removes all properties from the returning data except those that match an array of values, or \_id and \_schema
-  - `Person.findOneAndUpdate({name: 'Ben'},{name: 'Ben Danger'}, {select: ['name']})` returns data with properties \_id, \_schema, and name. 
+  - `Person.findOneAndUpdate({name: 'Ben'},{name: 'Ben Danger'}, {select: ['name']})` returns data with properties \_id, \_schema, and name.
 
 ### Deleting
 
@@ -315,7 +315,7 @@ The `.delete()` method should only be used on an instantiated document with a va
 
 ```javascript
 Dog.deleteMany({ breed: 'Collie' }).then(function(numDeleted) {
-    console.log('Deleted', numDeleted, 'Collies from the database.');
+  console.log('Deleted', numDeleted, 'Collies from the database.');
 });
 ```
 
@@ -325,7 +325,7 @@ To get the number of matching documents for a query without actually retrieving 
 
 ```javascript
 Dog.count({ breed: 'Collie' }).then(function(count) {
-    console.log('Found', count, 'Collies.');
+  console.log('Found', count, 'Collies.');
 });
 ```
 
@@ -350,28 +350,28 @@ Here is an example of using a hook (pre-delete, in this case):
 
 ```javascript
 class Company extends Document {
-    constructor() {
-        super();
+  constructor() {
+    super();
 
-        this.employees = [Person];
-    }
+    this.employees = [Person];
+  }
 
-    static collectionName() {
-        return 'companies';
-    }
+  static collectionName() {
+    return 'companies';
+  }
 
-    preDelete() {
-        var deletes = [];
-        this.employees.forEach(function(e) {
-            var p = new Promise(function(resolve, reject) {
-                resolve(e.delete());
-            });
+  preDelete() {
+    var deletes = [];
+    this.employees.forEach(function(e) {
+      var p = new Promise(function(resolve, reject) {
+        resolve(e.delete());
+      });
 
-            deletes.push(p);
-        });
+      deletes.push(p);
+    });
 
-        return Promise.all(deletes);
-    }
+    return Promise.all(deletes);
+  }
 }
 ```
 
@@ -381,20 +381,20 @@ The code above shows a pre-delete hook that deletes all the employees of the com
 
 ### Custom Database Driver
 
-Marpat provides two default database driver (NeDbClient and MongoDbClient). If you need to write you own database driver you can register it with the ClientRegistry service.
+Marpat provides two default database driver (NeDbClient and MongoDbClient). If you need to write you own database driver you can register it with the Registry service.
 
 ```javascript
-var { connect, ClientRegistry, DatabaseClient } = require('Marpat');
+var { connect, Registry, DatabaseClient } = require('Marpat');
 
 class MyClient extends DatabaseClient {
-    static canHandle(url) {
-        return url.indexOf('foo://') === 0;
-    }
+  static canHandle(url) {
+    return url.indexOf('foo://') === 0;
+  }
 }
 
-ClientRegistry.add(MyClient);
+Registry.add(MyClient);
 
-connect('foo://bar').then(function(db) { });
+connect('foo://bar').then(function(db) {});
 ```
 
 ### Misc.
@@ -441,6 +441,7 @@ npm test
 ```
 
 <!--@execute('npm run test',[])-->
+
 ```default
 > marpat@3.0.0 test /marpat
 > snyk test && nyc _mocha --recursive ./test --timeout=30000 --exit
@@ -849,9 +850,11 @@ All files              |       98 |    96.69 |    99.21 |    99.07 |            
   registry.js          |      100 |      100 |      100 |      100 |                   |
 -----------------------|----------|----------|----------|----------|-------------------|
 ```
+
 <!--/@-->
 
 <!--@dependencies()-->
+
 ## Dependencies
 
 - [@hapi/joi](https://github.com/hapijs/joi): Object schema validation
@@ -859,8 +862,9 @@ All files              |       98 |    96.69 |    99.21 |    99.07 |            
 - [snyk](https://github.com/snyk/snyk): snyk library and cli utility
 - [mongodb](https://github.com/mongodb/node-mongodb-native): The official MongoDB driver for Node.js
 - [nedb](https://github.com/louischatriot/nedb): File-based embedded data store for node.js
-<!--/@-->
-<!--@devDependencies()-->
+  <!--/@-->
+  <!--@devDependencies()-->
+
 ## Development Dependencies
 
 - [chai](https://github.com/chaijs/chai): BDD/TDD assertion library for node.js and the browser. Test framework agnostic.
@@ -876,14 +880,13 @@ All files              |       98 |    96.69 |    99.21 |    99.07 |            
 - [mocha-lcov-reporter](https://github.com/StevenLooman/mocha-lcov-reporter): LCOV reporter for Mocha
 - [mos](https://github.com/mosjs/mos): A pluggable module that injects content into your markdown files via hidden JavaScript snippets
 - [mos-plugin-execute](https://github.com/team-767/mos-plugin-execute): Mos plugin to inline a process output
+<!--/@-->
 - [nyc](https://github.com/istanbuljs/nyc): the Istanbul command line interface
 - [prettier](https://github.com/prettier/prettier): Prettier is an opinionated code formatter
 - [proxyquire](https://github.com/thlorenz/proxyquire): Proxies nodejs require in order to allow overriding dependencies during testing.
 - [sinon](https://github.com/sinonjs/sinon): JavaScript test spies, stubs and mocks.
-<!--/@-->
 
 <!--@license()-->
 ## License
-
 MIT © [Lui de la Parra](http://mutesymphony.com)
 <!--/@-->
