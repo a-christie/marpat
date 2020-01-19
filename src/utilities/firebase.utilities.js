@@ -15,11 +15,11 @@ const addWhereToRef = (ref, where) => {
 
 const addOptionsToRef = (ref, options) => {
   if (options.offset) {
-    ref.startAt(offset)
+    ref.startAt(offset);
   }
 
   if (options.limit) {
-    ref.limit(options.limit)
+    ref.limit(options.limit);
   }
 
   return ref.where(...where);
@@ -43,7 +43,11 @@ const convertQuery = query => {
       } else if (key.includes('$in')) {
         const parent = key.split('$in')[0].replace('.', '');
         if (parent === '_id') {
-          ids.push(value);
+          if (Array.isArray(value)) {
+            value.forEach(value => ids.push(value));
+          } else {
+            ids.push(value);
+          }
         } else if (Array.isArray(value)) {
           value.map(query => [parent, '==', value]);
           queries.push(value);
@@ -57,4 +61,9 @@ const convertQuery = query => {
   return { queries, ids };
 };
 
-module.exports =  { convertQuery, mapValuesDeep, addOptionsToRef, addWhereToRef }
+module.exports = {
+  convertQuery,
+  mapValuesDeep,
+  addOptionsToRef,
+  addWhereToRef
+};
