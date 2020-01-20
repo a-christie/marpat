@@ -22,6 +22,7 @@
     "es6",
     "odm",
     "mongodb",
+    "firebase",
     "nedb",
     "nosql",
     "document",
