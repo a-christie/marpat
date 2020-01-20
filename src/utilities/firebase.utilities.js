@@ -9,7 +9,6 @@ const addWhereToRef = (ref, where) => {
   if (Array.isArray(where[0])) {
     return where.reduce((acc, whereArgs) => addWhereToRef(acc, whereArgs), ref);
   }
-
   return ref.where(...where);
 };
 
