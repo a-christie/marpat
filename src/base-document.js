@@ -534,7 +534,7 @@ class BaseDocument {
 
       // Bulk load dereferences
       const p = type
-        .find({ _id: { $in: keyIds } }, { populate: false, reference:true })
+        .find({ _id: { $in: keyIds } }, { populate: false, reference: true })
         .then(function(dereferences) {
           // Assign each dereferenced object to parent
 
