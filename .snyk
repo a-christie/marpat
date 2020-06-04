@@ -38,3 +38,6 @@ patch:
   SNYK-JS-TREEKILL-536781:
     - snyk > snyk-sbt-plugin > tree-kill:
         patched: '2019-12-12T06:30:07.568Z'
+  SNYK-JS-LODASH-567746:
+    - lodash:
+        patched: '2020-06-04T14:16:06.290Z'
